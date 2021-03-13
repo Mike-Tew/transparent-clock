@@ -2,15 +2,24 @@ from tkinter import Tk, LabelFrame, Label, Button
 from datetime import datetime
 import time
 
-counter = 0
+counter = 28800
 running = False
+testing = None
 
 def counting():
     global counter
-    tt = datetime.fromtimestamp(100)
-    string = tt.strftime("%H:%M:%S")
-    display = string
+    global running
+    print("I am running")
+    print(timer_label.after)
 
+    if running == True:
+        timer_timestamp = datetime.fromtimestamp(counter)
+        label_text = timer_timestamp.strftime("%H:%M:%S")
+        timer_label["text"] = label_text
+        counter += 1
+
+    global testing
+    testing = timer_label.after(1000, counting)
 
 
 
@@ -19,10 +28,7 @@ def start_timer(timer_label):
 
     global running
     running = True
-    print(time.time())
-    # timer_label.after(1000, )
-    # timer_label['text'] = string
-
+    counting()
     start_button["state"] = "disabled"
     pause_button["state"] = "normal"
     reset_button["state"] = "normal"
@@ -43,10 +49,15 @@ def reset_timer():
     """Reset and display the timer."""
 
     global counter
-    counter = 0
+    global running
+    running = False
+    counter = 28800
+
+    global testing
+    timer_label.after_cancel(testing)
 
     start_button["state"] = "normal"
-    pause_button["state"] = "normal"
+    pause_button["state"] = "disabled"
     reset_button["state"] = "disabled"
 
 
@@ -81,7 +92,7 @@ root.geometry("300x150+800+300")
 timer_frame = LabelFrame(root)
 timer_frame.grid(row=0, column=0)
 
-timer_label = Label(timer_frame, text="00:00:00", font=("Helvetica 20"))
+timer_label = Label(timer_frame, text="temp", font=("Helvetica 20"))
 timer_label.grid(row=0, column=0, columnspan=3)
 
 start_button = Button(timer_frame, text="Start", command=lambda: start_timer(timer_label))
