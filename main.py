@@ -16,19 +16,38 @@ def counting():
 
 def start_timer(timer_label):
     """Start and display the timer."""
+
+    global running
+    running = True
     print(time.time())
     # timer_label.after(1000, )
-    timer_label['text'] = string
+    # timer_label['text'] = string
+
+    start_button["state"] = "disabled"
+    pause_button["state"] = "normal"
+    reset_button["state"] = "normal"
 
 
 def pause_timer():
     """Pause and display the timer."""
-    pass
+
+    global running
+    running = False
+
+    start_button["state"] = "normal"
+    pause_button["state"] = "disabled"
+    reset_button["state"] = "normal"
 
 
 def reset_timer():
     """Reset and display the timer."""
-    pass
+
+    global counter
+    counter = 0
+
+    start_button["state"] = "normal"
+    pause_button["state"] = "normal"
+    reset_button["state"] = "disabled"
 
 
 def increase_opacity(increase_opacity_button):
