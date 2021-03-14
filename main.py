@@ -1,3 +1,9 @@
+# TODO
+# Fix the delay on the pause button when timer resumes.
+# Implement an "Always on top" button.
+# Resize and improve app layout.
+# Make images for Play/Pause/Reset buttons.
+
 from tkinter import Tk, LabelFrame, Label, Button
 from datetime import datetime
 
@@ -8,7 +14,7 @@ class Clock(Tk):
 
         self.counter = 28800
         self.running = False
-        self.testing = None
+        self.counting_id = None
         self.default_display = "00:00:00"
 
         self.geometry("300x150+800+300")
@@ -24,7 +30,7 @@ class Clock(Tk):
         self.start_button = Button(
             self.timer_frame,
             text="Start",
-            command=lambda: self.start_timer(self.timer_label),
+            command=self.start_timer,
         )
         self.start_button.grid(row=1, column=0)
 
@@ -46,7 +52,7 @@ class Clock(Tk):
             text="+",
             width=2,
             font=("Helvetica 15"),
-            command=lambda: self.increase_opacity(self.increase_opacity_button),
+            command=self.increase_opacity,
         )
         self.increase_opacity_button.grid(row=0, column=3)
 
@@ -55,7 +61,7 @@ class Clock(Tk):
             text="-",
             width=2,
             font=("Helvetica 15"),
-            command=lambda: self.decrease_opacity(self.decrease_opacity_button),
+            command=self.decrease_opacity,
         )
         self.decrease_opacity_button.grid(row=1, column=3)
 
@@ -70,9 +76,9 @@ class Clock(Tk):
             self.timer_label.config(text=label_text)
             self.counter += 1
 
-        self.testing = self.timer_label.after(1000, self.counting)
+        self.counting_id = self.timer_label.after(1000, self.counting)
 
-    def start_timer(self, timer_label):
+    def start_timer(self):
         """Start and display the timer."""
 
         self.running = True
@@ -85,7 +91,7 @@ class Clock(Tk):
         """Pause and display the timer."""
 
         self.running = False
-        self.timer_label.after_cancel(self.testing)
+        self.timer_label.after_cancel(self.counting_id)
 
         self.start_button["state"] = "normal"
         self.pause_button["state"] = "disabled"
@@ -96,25 +102,25 @@ class Clock(Tk):
 
         self.running = False
         self.counter = 28800
-        self.timer_label.after_cancel(self.testing)
+        self.timer_label.after_cancel(self.counting_id)
         self.timer_label.config(text=self.default_display)
 
         self.start_button["state"] = "normal"
         self.pause_button["state"] = "disabled"
         self.reset_button["state"] = "disabled"
 
-    def increase_opacity(self, increase_opacity_button):
+    def increase_opacity(self):
         """Increase the opacity of the app."""
 
         self.decrease_opacity_button["state"] = "normal"
         opacity = self.attributes()[1]
 
         if opacity >= 1:
-            increase_opacity_button["state"] = "disabled"
+            self.increase_opacity_button["state"] = "disabled"
         else:
             self.attributes("-alpha", opacity + 0.1)
 
-    def decrease_opacity(self, decrease_opacity_button):
+    def decrease_opacity(self):
         """Decrease the opacity of the app."""
 
         self.increase_opacity_button["state"] = "normal"
@@ -122,7 +128,7 @@ class Clock(Tk):
 
         if opacity <= 0.2:
             self.attributes("-alpha", 0.1)
-            decrease_opacity_button["state"] = "disabled"
+            self.decrease_opacity_button["state"] = "disabled"
         else:
             self.attributes("-alpha", opacity - 0.1)
 
