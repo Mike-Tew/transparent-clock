@@ -18,15 +18,22 @@ class Clock(Tk):
         self.timer_label = Label(self.timer_frame, text="temp", font=("Helvetica 20"))
         self.timer_label.grid(row=0, column=0, columnspan=3)
 
-        self.start_button = Button(self.timer_frame, text="Start", command=lambda: self.start_timer(self.timer_label))
+        self.start_button = Button(
+            self.timer_frame,
+            text="Start",
+            command=lambda: self.start_timer(self.timer_label),
+        )
         self.start_button.grid(row=1, column=0)
 
-        self.pause_button = Button(self.timer_frame, text="Pause", command=self.pause_timer)
+        self.pause_button = Button(
+            self.timer_frame, text="Pause", command=self.pause_timer
+        )
         self.pause_button.grid(row=1, column=1)
 
-        self.reset_button = Button(self.timer_frame, text="Reset", command=self.reset_timer)
+        self.reset_button = Button(
+            self.timer_frame, text="Reset", command=self.reset_timer
+        )
         self.reset_button.grid(row=1, column=2)
-
 
         self.opacity_frame = LabelFrame(self, text="Opacity")
         self.opacity_frame.grid(row=0, column=1, padx=[20, 0])
@@ -51,18 +58,16 @@ class Clock(Tk):
 
         self.attributes("-alpha", 0.9)
 
-
     def counting(self):
         print("I am running.")
         print(self.timer_label.after)
 
-        if self.running == True:
+        if self.running:
             timer_timestamp = datetime.fromtimestamp(self.counter)
             label_text = timer_timestamp.strftime("%H:%M:%S")
             self.timer_label["text"] = label_text
 
         self.testing = self.timer_label.after(1000, self.counting)
-
 
     def start_timer(self, timer_label):
         """Start and display the timer."""
@@ -73,7 +78,6 @@ class Clock(Tk):
         self.pause_button["state"] = "normal"
         self.reset_button["state"] = "normal"
 
-
     def pause_timer(self):
         """Pause and display the timer."""
 
@@ -82,7 +86,6 @@ class Clock(Tk):
         self.start_button["state"] = "normal"
         self.pause_button["state"] = "disabled"
         self.reset_button["state"] = "normal"
-
 
     def reset_timer(self):
         """Reset and display the timer."""
@@ -96,7 +99,6 @@ class Clock(Tk):
         self.pause_button["state"] = "disabled"
         self.reset_button["state"] = "disabled"
 
-
     def increase_opacity(self, increase_opacity_button):
         """Increase the opacity of the app."""
 
@@ -107,7 +109,6 @@ class Clock(Tk):
             increase_opacity_button["state"] = "disabled"
         else:
             self.attributes("-alpha", opacity + 0.1)
-
 
     def decrease_opacity(self, decrease_opacity_button):
         """Decrease the opacity of the app."""
