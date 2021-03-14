@@ -1,135 +1,129 @@
 from tkinter import Tk, LabelFrame, Label, Button
 from datetime import datetime
-import time
 
 
+class Clock(Tk):
+    def __init__(self):
+        super().__init__()
 
-counter = 28800
-running = False
-testing = None
+        self.counter = 28800
+        self.running = False
+        self.testing = None
 
-def counting():
-    global counter
-    global running
-    print("I am running")
-    print(timer_label.after)
+        self.geometry("300x150+800+300")
 
-    if running == True:
-        timer_timestamp = datetime.fromtimestamp(counter)
-        label_text = timer_timestamp.strftime("%H:%M:%S")
-        timer_label["text"] = label_text
-        counter += 1
+        self.timer_frame = LabelFrame(self)
+        self.timer_frame.grid(row=0, column=0)
 
-    global testing
-    testing = timer_label.after(1000, counting)
+        self.timer_label = Label(self.timer_frame, text="temp", font=("Helvetica 20"))
+        self.timer_label.grid(row=0, column=0, columnspan=3)
 
+        self.start_button = Button(self.timer_frame, text="Start", command=lambda: self.start_timer(self.timer_label))
+        self.start_button.grid(row=1, column=0)
 
+        self.pause_button = Button(self.timer_frame, text="Pause", command=self.pause_timer)
+        self.pause_button.grid(row=1, column=1)
 
-def start_timer(timer_label):
-    """Start and display the timer."""
-
-    global running
-    running = True
-    counting()
-    start_button["state"] = "disabled"
-    pause_button["state"] = "normal"
-    reset_button["state"] = "normal"
+        self.reset_button = Button(self.timer_frame, text="Reset", command=self.reset_timer)
+        self.reset_button.grid(row=1, column=2)
 
 
-def pause_timer():
-    """Pause and display the timer."""
+        self.opacity_frame = LabelFrame(self, text="Opacity")
+        self.opacity_frame.grid(row=0, column=1, padx=[20, 0])
 
-    global running
-    running = False
+        self.increase_opacity_button = Button(
+            self.opacity_frame,
+            text="+",
+            width=2,
+            font=("Helvetica 15"),
+            command=lambda: self.increase_opacity(self.increase_opacity_button),
+        )
+        self.increase_opacity_button.grid(row=0, column=3)
 
-    start_button["state"] = "normal"
-    pause_button["state"] = "disabled"
-    reset_button["state"] = "normal"
+        self.decrease_opacity_button = Button(
+            self.opacity_frame,
+            text="-",
+            width=2,
+            font=("Helvetica 15"),
+            command=lambda: self.decrease_opacity(self.decrease_opacity_button),
+        )
+        self.decrease_opacity_button.grid(row=1, column=3)
 
-
-def reset_timer():
-    """Reset and display the timer."""
-
-    global counter
-    global running
-    running = False
-    counter = 28800
-
-    global testing
-    timer_label.after_cancel(testing)
-
-    start_button["state"] = "normal"
-    pause_button["state"] = "disabled"
-    reset_button["state"] = "disabled"
+        self.attributes("-alpha", 0.9)
 
 
-def increase_opacity(increase_opacity_button):
-    """Increase the opacity of the app."""
+    def counting(self):
+        print("I am running.")
+        print(self.timer_label.after)
 
-    decrease_opacity_button["state"] = "normal"
-    opacity = root.attributes()[1]
+        if self.running == True:
+            timer_timestamp = datetime.fromtimestamp(self.counter)
+            label_text = timer_timestamp.strftime("%H:%M:%S")
+            self.timer_label["text"] = label_text
 
-    if opacity >= 1:
-        increase_opacity_button["state"] = "disabled"
-    else:
-        root.attributes("-alpha", opacity + 0.1)
-
-
-def decrease_opacity(decrease_opacity_button):
-    """Decrease the opacity of the app."""
-
-    increase_opacity_button["state"] = "normal"
-    opacity = root.attributes()[1]
-
-    if opacity <= 0.2:
-        root.attributes("-alpha", 0.1)
-        decrease_opacity_button["state"] = "disabled"
-    else:
-        root.attributes("-alpha", opacity - 0.1)
+        self.testing = self.timer_label.after(1000, self.counting)
 
 
-root = Tk()
-root.geometry("300x150+800+300")
+    def start_timer(self, timer_label):
+        """Start and display the timer."""
 
-timer_frame = LabelFrame(root)
-timer_frame.grid(row=0, column=0)
-
-timer_label = Label(timer_frame, text="temp", font=("Helvetica 20"))
-timer_label.grid(row=0, column=0, columnspan=3)
-
-start_button = Button(timer_frame, text="Start", command=lambda: start_timer(timer_label))
-start_button.grid(row=1, column=0)
-
-pause_button = Button(timer_frame, text="Pause", command=pause_timer)
-pause_button.grid(row=1, column=1)
-
-reset_button = Button(timer_frame, text="Reset", command=reset_timer)
-reset_button.grid(row=1, column=2)
+        self.running = True
+        self.counting()
+        self.start_button["state"] = "disabled"
+        self.pause_button["state"] = "normal"
+        self.reset_button["state"] = "normal"
 
 
-opacity_frame = LabelFrame(root, text="Opacity")
-opacity_frame.grid(row=0, column=1, padx=[20, 0])
+    def pause_timer(self):
+        """Pause and display the timer."""
 
-increase_opacity_button = Button(
-    opacity_frame,
-    text="+",
-    width=2,
-    font=("Helvetica 15"),
-    command=lambda: increase_opacity(increase_opacity_button),
-)
-increase_opacity_button.grid(row=0, column=3)
+        self.running = False
 
-decrease_opacity_button = Button(
-    opacity_frame,
-    text="-",
-    width=2,
-    font=("Helvetica 15"),
-    command=lambda: decrease_opacity(decrease_opacity_button),
-)
-decrease_opacity_button.grid(row=1, column=3)
+        self.start_button["state"] = "normal"
+        self.pause_button["state"] = "disabled"
+        self.reset_button["state"] = "normal"
 
-root.attributes("-alpha", 0.9)
+
+    def reset_timer(self):
+        """Reset and display the timer."""
+
+        self.running = False
+        self.counter = 28800
+
+        self.timer_label.after_cancel(self.testing)
+
+        self.start_button["state"] = "normal"
+        self.pause_button["state"] = "disabled"
+        self.reset_button["state"] = "disabled"
+
+
+    def increase_opacity(self, increase_opacity_button):
+        """Increase the opacity of the app."""
+
+        self.decrease_opacity_button["state"] = "normal"
+        opacity = self.attributes()[1]
+
+        if opacity >= 1:
+            increase_opacity_button["state"] = "disabled"
+        else:
+            self.attributes("-alpha", opacity + 0.1)
+
+
+    def decrease_opacity(self, decrease_opacity_button):
+        """Decrease the opacity of the app."""
+
+        self.increase_opacity_button["state"] = "normal"
+        opacity = self.attributes()[1]
+
+        if opacity <= 0.2:
+            self.attributes("-alpha", 0.1)
+            decrease_opacity_button["state"] = "disabled"
+        else:
+            self.attributes("-alpha", opacity - 0.1)
+
+
+if __name__ == "__main__":
+    clock = Clock()
+    clock.mainloop()
 # root.attributes('-topmost', True)
 # root.update()
-
-root.mainloop()
