@@ -9,13 +9,16 @@ class Clock(Tk):
         self.counter = 28800
         self.running = False
         self.testing = None
+        self.default_display = "00:00:00"
 
         self.geometry("300x150+800+300")
 
         self.timer_frame = LabelFrame(self)
         self.timer_frame.grid(row=0, column=0)
 
-        self.timer_label = Label(self.timer_frame, text="temp", font=("Helvetica 20"))
+        self.timer_label = Label(
+            self.timer_frame, text=self.default_display, font=("Helvetica 20")
+        )
         self.timer_label.grid(row=0, column=0, columnspan=3)
 
         self.start_button = Button(
@@ -60,12 +63,12 @@ class Clock(Tk):
 
     def counting(self):
         print("I am running.")
-        print(self.timer_label.after)
 
         if self.running:
             timer_timestamp = datetime.fromtimestamp(self.counter)
             label_text = timer_timestamp.strftime("%H:%M:%S")
-            self.timer_label["text"] = label_text
+            self.timer_label.config(text=label_text)
+            self.counter += 1
 
         self.testing = self.timer_label.after(1000, self.counting)
 
@@ -82,6 +85,7 @@ class Clock(Tk):
         """Pause and display the timer."""
 
         self.running = False
+        self.timer_label.after_cancel(self.testing)
 
         self.start_button["state"] = "normal"
         self.pause_button["state"] = "disabled"
@@ -92,8 +96,8 @@ class Clock(Tk):
 
         self.running = False
         self.counter = 28800
-
         self.timer_label.after_cancel(self.testing)
+        self.timer_label.config(text=self.default_display)
 
         self.start_button["state"] = "normal"
         self.pause_button["state"] = "disabled"
