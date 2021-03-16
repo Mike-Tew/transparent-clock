@@ -1,20 +1,19 @@
-# TODO
-# Cleanup code
-
 from tkinter import Tk, LabelFrame, Label, Button
 from datetime import datetime
+
 
 class Clock(Tk):
     def __init__(self):
         super().__init__()
 
         self.title("Timer")
-        # self.geometry("300x150+800+300")
         self.counter = 28800
         self.running = False
         self.counting_id = None
         self.default_display = "00:00:00"
         self.on_top = False
+        self.geometry("+800+300")
+        self.attributes("-alpha", 0.9)
 
         self.timer_frame = LabelFrame(self, text="Timer")
         self.timer_frame.grid(row=0, column=0, padx=[20, 0], pady=10)
@@ -67,10 +66,8 @@ class Clock(Tk):
         )
         self.on_top_button.grid(row=1, column=0, columnspan=2, pady=[5, 0])
 
-        self.attributes("-alpha", 0.9)
-
     def counting(self):
-        print("I am running.")
+        """Timer functionality."""
 
         if self.running:
             timer_timestamp = datetime.fromtimestamp(self.counter)
