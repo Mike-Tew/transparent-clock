@@ -92,6 +92,7 @@ class Clock(Tk):
 
         self.running = False
         self.timer_label.after_cancel(self.counting_id)
+        self.counter -= 1
 
         self.start_button["state"] = "normal"
         self.pause_button["state"] = "disabled"
