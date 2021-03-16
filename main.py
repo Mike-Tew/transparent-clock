@@ -1,12 +1,10 @@
 # TODO
-# Fix the delay on the pause button when timer resumes.
-# Implement an "Always on top" button.
 # Resize and improve app layout.
 # Make images for Play/Pause/Reset buttons.
+# Add window title.
 
 from tkinter import Tk, LabelFrame, Label, Button
 from datetime import datetime
-
 
 class Clock(Tk):
     def __init__(self):
@@ -16,6 +14,7 @@ class Clock(Tk):
         self.running = False
         self.counting_id = None
         self.default_display = "00:00:00"
+        self.on_top = False
 
         self.geometry("300x150+800+300")
 
@@ -64,6 +63,11 @@ class Clock(Tk):
             command=self.decrease_opacity,
         )
         self.decrease_opacity_button.grid(row=1, column=3)
+
+        self.on_top_button = Button(
+            self, text="Always On Top", command=self.always_on_top
+        )
+        self.on_top_button.grid(row=0, column=2)
 
         self.attributes("-alpha", 0.9)
 
@@ -133,9 +137,17 @@ class Clock(Tk):
         else:
             self.attributes("-alpha", opacity - 0.1)
 
+    def always_on_top(self):
+        if self.on_top == False:
+            self.on_top = True
+            self.attributes("-topmost", True)
+            self.on_top_button.config(fg="red")
+        else:
+            self.on_top = False
+            self.attributes("-topmost", False)
+            self.on_top_button.config(fg="black")
+
 
 if __name__ == "__main__":
     clock = Clock()
     clock.mainloop()
-# root.attributes('-topmost', True)
-# root.update()
