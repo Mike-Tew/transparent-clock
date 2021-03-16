@@ -1,7 +1,5 @@
 # TODO
-# Resize and improve app layout.
-# Make images for Play/Pause/Reset buttons.
-# Add window title.
+# Cleanup code
 
 from tkinter import Tk, LabelFrame, Label, Button
 from datetime import datetime
@@ -10,16 +8,16 @@ class Clock(Tk):
     def __init__(self):
         super().__init__()
 
+        self.title("Timer")
+        # self.geometry("300x150+800+300")
         self.counter = 28800
         self.running = False
         self.counting_id = None
         self.default_display = "00:00:00"
         self.on_top = False
 
-        self.geometry("300x150+800+300")
-
-        self.timer_frame = LabelFrame(self)
-        self.timer_frame.grid(row=0, column=0)
+        self.timer_frame = LabelFrame(self, text="Timer")
+        self.timer_frame.grid(row=0, column=0, padx=[20, 0], pady=10)
 
         self.timer_label = Label(
             self.timer_frame, text=self.default_display, font=("Helvetica 20")
@@ -44,30 +42,30 @@ class Clock(Tk):
         self.reset_button.grid(row=1, column=2)
 
         self.opacity_frame = LabelFrame(self, text="Opacity")
-        self.opacity_frame.grid(row=0, column=1, padx=[20, 0])
-
-        self.increase_opacity_button = Button(
-            self.opacity_frame,
-            text="+",
-            width=2,
-            font=("Helvetica 15"),
-            command=self.increase_opacity,
-        )
-        self.increase_opacity_button.grid(row=0, column=3)
+        self.opacity_frame.grid(row=0, column=1, padx=20)
 
         self.decrease_opacity_button = Button(
             self.opacity_frame,
             text="-",
             width=2,
-            font=("Helvetica 15"),
+            font=("Helvetica 12"),
             command=self.decrease_opacity,
         )
-        self.decrease_opacity_button.grid(row=1, column=3)
+        self.decrease_opacity_button.grid(row=0, column=0, padx=[10, 0])
+
+        self.increase_opacity_button = Button(
+            self.opacity_frame,
+            text="+",
+            width=2,
+            font=("Helvetica 12"),
+            command=self.increase_opacity,
+        )
+        self.increase_opacity_button.grid(row=0, column=1, padx=[0, 10])
 
         self.on_top_button = Button(
-            self, text="Always On Top", command=self.always_on_top
+            self.opacity_frame, text="Always On Top", command=self.always_on_top
         )
-        self.on_top_button.grid(row=0, column=2)
+        self.on_top_button.grid(row=1, column=0, columnspan=2, pady=[5, 0])
 
         self.attributes("-alpha", 0.9)
 
